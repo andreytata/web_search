@@ -19,11 +19,12 @@ def find_use_duck_duck_go( query ):
     query = urllib.parse.quote(query)  # comment this line to crash test 2 in unittests 
     query = "https://duckduckgo.com/html/?q=%s" % query
     buff  = str(urllib.request.urlopen(query).read())
-    bs    = bs4.BeautifulSoup( buff, "lxml" )
+    bs    = bs4.BeautifulSoup( buff, "html.parser" )
     links = [ re.findall( "uddg=(.*)\" rel", str(i) ) for i in bs.find_all('a') if "uddg=" in repr(i) ]
     links = [ urllib.parse.unquote( i[0] ) for i in links if i ]
     links = [ i.replace("https://www.", "https://") for i in links ]
     links = [ i.replace("http://www.", "http://") for i in links ]
+    
     clean = [ ]
     for key in black_list:
         for link in links:
@@ -31,13 +32,16 @@ def find_use_duck_duck_go( query ):
                 print ("REMOVE " + key + "=>" + black_list[key] )
                 continue
             clean.append(link)
+
     return sorted( [ i for i in set(clean) ] )
 
 def search(query):
     return find_use_duck_duck_go( query )
 
 if __name__=="__main__":
-    print( sys.prefix, sys.version )
     query = "+".join( sys.argv[1:] )
+    if "" == query:
+        sys.exit(0)
+    print( sys.prefix, sys.version )
     print( '''Web Search "%s"''' % query )
     print( "\n".join( [ "%02d %s" % i for i in enumerate( search( query ) ) ] ) )
