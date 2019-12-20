@@ -1,5 +1,3 @@
-#/usr/bin/python3
-
 """ Serch Web use "Duck-Duck-Go" serch engine
 >>> import web_search
 >>> urls = web_search.find_use_duck_duck_go("anime+ru"))
@@ -18,6 +16,7 @@ def find_use_duck_duck_go( query ):
     """  Serch Web use "Duck-Duck-Go" serch engine.
        Return sorted urls list w/o dublicates
     """
+    query = urllib.parse.quote(query)  # comment this line to crash test 2 in unittests 
     query = "https://duckduckgo.com/html/?q=%s" % query
     buff  = str(urllib.request.urlopen(query).read())
     bs    = bs4.BeautifulSoup( buff, "lxml" )
@@ -34,8 +33,11 @@ def find_use_duck_duck_go( query ):
             clean.append(link)
     return sorted( [ i for i in set(clean) ] )
 
+def search(query):
+    return find_use_duck_duck_go( query )
+
 if __name__=="__main__":
-    print(sys.prefix)
-    print(sys.version)
-    query = "%2B".join( [ urllib.parse.quote(i) for i in sys.argv[1:] ] )
-    print( "\n".join( [ "%02d %s" % i for i in enumerate( find_use_duck_duck_go( query ) ) ] ) )
+    print( sys.prefix, sys.version )
+    query = "+".join( sys.argv[1:] )
+    print( '''Web Search "%s"''' % query )
+    print( "\n".join( [ "%02d %s" % i for i in enumerate( search( query ) ) ] ) )
