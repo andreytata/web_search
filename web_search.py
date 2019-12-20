@@ -6,7 +6,7 @@
 python3 -m web_search naruto boruto online ru 
 """
 
-import re, urllib, bs4, sys, pdb
+import re, urllib.request, urllib.parse, bs4, sys, pdb
 
 black_list=\
 { u"https://smotret-anime.online" : u"платный"
@@ -20,7 +20,7 @@ def find_use_duck_duck_go( query ):
     """
     query = "https://duckduckgo.com/html/?q=%s" % query
     buff  = str(urllib.request.urlopen(query).read())
-    bs    = bs4.BeautifulSoup( buff, "html5lib" )
+    bs    = bs4.BeautifulSoup( buff, "lxml" )
     links = [ re.findall( "uddg=(.*)\" rel", str(i) ) for i in bs.find_all('a') if "uddg=" in repr(i) ]
     links = [ urllib.parse.unquote( i[0] ) for i in links if i ]
     links = [ i.replace("https://www.", "https://") for i in links ]
@@ -35,5 +35,7 @@ def find_use_duck_duck_go( query ):
     return sorted( [ i for i in set(clean) ] )
 
 if __name__=="__main__":
+    print(sys.prefix)
+    print(sys.version)
     query = "%2B".join( [ urllib.parse.quote(i) for i in sys.argv[1:] ] )
     print( "\n".join( [ "%02d %s" % i for i in enumerate( find_use_duck_duck_go( query ) ) ] ) )
