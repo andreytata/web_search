@@ -8,8 +8,8 @@ import re, urllib.request, urllib.parse, bs4, sys, pdb
 
 black_list=\
 { u"https://smotret-anime.online" : u"платный"
-#, u"https://google.com"           : u"повторный поиск, - эхо ключевых слов запроса"
-#, u"https://animego"              : u"тест черного списка"
+, u"https://google.com"           : u"повторный поиск, - эхо ключевых слов запроса"
+, u"https://animego"              : u"тест черного списка"
 }
 
 def find_use_duck_duck_go( query ):
@@ -45,3 +45,5 @@ if __name__=="__main__":
     print( sys.prefix, sys.version )
     print( '''Web Search "%s"''' % query )
     print( "\n".join( [ "%02d %s" % i for i in enumerate( search( query ) ) ] ) )
+
+    #print("\n".join([ re.findall(r"""<a.+href=\"([^>]*)\">""",str(i))[0] for i in buff.find_all('a') ]))
