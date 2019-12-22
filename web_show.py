@@ -1,4 +1,4 @@
-import os, sys, io, tempfile, webbrowser;
+import os, sys, io, tempfile, webbrowser
 
 from web_search import search                                         # import our module with web search function
 
