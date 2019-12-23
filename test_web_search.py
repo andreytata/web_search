@@ -1,4 +1,4 @@
-import web_search, urllib.parse
+import web_search, urllib.parse, pdb
 
 def test_duck_duck_go_naruto():
     links = web_search.find_use_duck_duck_go("naruto+ru")
@@ -25,11 +25,15 @@ def test_search_kamisama_anime_japanise():
     print("\n".join(links))
 
 if __name__ == "__main__":
+    print(u'\nFIND duck_duck_go: u"naruto+ru"')
     test_duck_duck_go_naruto()
+    print(u'\nFIND duck_duck_go: u"Наруто+Боруто"')
     test_duck_duck_go_naruto_russian()
+    print(u'\nFIND yahho: u"naruto+ru"')
     test_yahoo_no_js_naruto()
+    print(u'\nFIND yahho: u"Наруто+Боруто"')
     test_yahoo_no_js_naruto_russian()
-    print(u"FIND: KAMISAMA")
+    print(u'\nFIND:u"Kamisama Hajimemashita"')
     test_search_kamisama_anime_english()
-    print(u"FIND: 神様はじめました")
+    print(u'\nFIND:u"神様はじめました"')
     test_search_kamisama_anime_japanise()
