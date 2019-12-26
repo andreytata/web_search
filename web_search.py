@@ -12,6 +12,29 @@ black_list=\
 , u"https://animego"              : u"тест черного списка"
 }
 
+def find_use_bing_no_js(query):
+    """Search Web use "bing". Return sorted urls list w/o dublicates"""
+    query = urllib.parse.quote(query)  # comment this line to crash test 2 in unittests 
+    query = "http://www.bing.com/search?q=%s" % query
+    buff  = str(urllib.request.urlopen(query).read())
+    bs    = bs4.BeautifulSoup( buff, "html.parser" )
+    links = [ i for i in bs.find_all('a') if not ".microsoft." in repr(i) ]
+    links = [ re.findall("href=\"(http[^\"]*)\"", str(i)) for i in links ]
+    links = [ urllib.parse.unquote( i[0] ) for i in links if i ]
+    links = [ i.replace("https://www.", "https://") for i in links ]
+    links = [ i.replace("http://www.", "http://") for i in links ]
+    clean = [ ]
+    for key in black_list:
+        for link in links:
+            if not link.startswith("http"):
+                print ("REMOVE " + link + "=> AS INVALID LINK" )
+                continue
+            if link.startswith(key):
+                print ("REMOVE " + key + "=>" + black_list[key] )
+                continue
+            clean.append(link)
+    return sorted( [ i for i in set(clean) ] )
+
 def find_use_yahoo_no_js( query ):
     """Serch Web use "Yahoo". Return sorted urls list w/o dublicates"""
     query = urllib.parse.quote(query)  # comment this line to crash test 2 in unittests 
@@ -57,7 +80,8 @@ def find_use_duck_duck_go( query ):
 def search(query):
     yahoo_result = find_use_yahoo_no_js  ( query )
     duck_duck_go = find_use_duck_duck_go ( query )
-    return sorted( set( yahoo_result + duck_duck_go ) )
+    bing_results = find_use_bing_no_js   ( query )
+    return sorted( set( yahoo_result + duck_duck_go + bing_results ) )
 
 if __name__=="__main__":
     query = "+".join( sys.argv[1:] )
