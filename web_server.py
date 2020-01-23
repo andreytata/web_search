@@ -19,7 +19,7 @@ class RequestHandler(CGIHTTPRequestHandler):
             return translated
         return CGIHTTPRequestHandler.translate_path(self, path)    
 
-PORT = 8080
+PORT = 8000
 
 httpd = HTTPServer(("", PORT), RequestHandler)
 print("serving at port", PORT)
